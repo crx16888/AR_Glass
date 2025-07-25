@@ -174,3 +174,5 @@ python -m http.server 8000启动Python 的内置 HTTP 服务器运行网站
 1. 将代码部署到真实的 Web 服务器上
 2. 配置一个实际的域名
 3. 使用正式的 Web 服务器软件（如 Nginx, Apache 等）
+
+AR_Glass下node server.js启动网站打开http://47.97.183.238:3000即可打开网页
