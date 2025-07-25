@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head> <!-- 控制本页面的一些基本信息，不显示在页面上 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>好感度监测系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body> <!-- 页面主体信息 -->
+    <!-- 最外层容器，类名 container 是通用命名，通常会在CSS中设置 max-width 和 margin；这个框的大小和位置在css被定义 -->
+    <div class="container">
+        <!-- 左侧好感度显示区域，父级容器 -->
+        <div class="happiness-display">
+            <!-- 定义标签类名，用于标题标签，css可以对标签进行样式；子级容器，h1专门表示一种大标题的容器 -->
+            <h1 class="happiness-title">Happiness</h1>
+            <!-- 定义标签类名，整个组件的容器用于通用标签，js也可以对标签相关的内容实现逻辑控制 -->
+            <!-- 标签是通用模块标识符，id是唯一，js通过对id进行操作，其值初始值为73 -->
+            <div class="happiness-value" id="happinessValue">73</div>
+            <!-- 这段代码专门用于写进度条的容器，外层用于容器，内层用于显示实时进度 -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- 右侧需求内容显示区域 -->
+        <div class="content-panel">
+            <h2 class="panel-title">需求内容</h2>
+            
+            <div class="requirement-item">
+                <div class="requirement-label">
+                    <span class="status-indicator"></span>对方对我的好感度
+                </div>
+                <div class="requirement-value">实时监测中...</div>
+            </div>
+            
+            <div class="requirement-item">
+                <div class="requirement-label">
+                    <span class="status-indicator"></span>当前状态
+                </div>
+                <div class="requirement-value">积极友好</div>
+            </div>
+            
+            <div class="requirement-item">
+                <div class="requirement-label">
+                    <span class="status-indicator"></span>建议行动
+                </div>
+                <div class="requirement-value">保持当前交流方式</div>
+            </div>
+            
+            <div class="requirement-item">
+                <div class="requirement-label">
+                    <span class="status-indicator"></span>更新时间
+                </div>
+                <div class="requirement-value" id="updateTime">刚刚</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script> <!--浏览器会立即加载并执行这个JS文件 -->
+</body>
+</html>

@@ -1,0 +1,190 @@
+/* css语法：选择所有元素 */
+* {
+    margin: 0;  /* 外边距清零 */
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body { /* 设置所有body元素都要遵从这个准则。body 是HTML文档的根容器，所有可见内容都在其中。通常用于设置全局默认样式（字体、背景、边距等） */
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {/*.container 是最外层容器的CSS样式定义，包含了两个主要子容器：左侧好感度显示区域（ happiness-display ）和右侧需求内容区域（ content-panel ） */
+    /* 其基础css会被子容器继承 */
+    display: flex;  /* 定义基础布局方式 */
+    height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* 左侧好感度显示区域 */
+.happiness-display {
+    flex: 3;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.happiness-display::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.happiness-title {
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: #333;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    z-index: 1;
+}
+
+.happiness-value {
+    font-size: 8rem;
+    font-weight: 700;
+    color: #4a90e2;
+    text-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.happiness-value:hover { /* 伪类：仅仅用于装饰，不需要html标签。鼠标悬停时，文字颜色和透明度变化 */
+    transform: scale(1.05);
+    color: #357abd;
+}
+
+.progress-bar {
+    width: 80%;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    margin-top: 40px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4a90e2, #357abd);
+    border-radius: 10px;
+    width: 73%;
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progress-shimmer 2s infinite;
+}
+
+/* 定义了一个名为 progress-shimmer 的动画效果，用于填充.progress-fill伪元素，在上面有定义 */
+@keyframes progress-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* 右侧需求内容显示区域 */
+.content-panel {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 2px solid #4a90e2;
+    padding-bottom: 15px;
+}
+
+.requirement-item {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid #4a90e2;
+    transition: all 0.3s ease;
+}
+
+.requirement-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.requirement-label {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.requirement-value {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #4a90e2;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 10px;
+    }
+    
+    .happiness-value {
+        font-size: 5rem;
+    }
+    
+    .happiness-title {
+        font-size: 2.5rem;
+    }
+}
