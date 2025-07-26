@@ -6,7 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const FormData = require('form-data');
 const fetch = require('node-fetch');
-// const Xunfei = require('xunfeisdk'); // 已移除科大讯飞依赖
+const http = require('http');
+const https = require('https');
 
 const app = express();
 const PORT = 3001;
@@ -39,9 +40,6 @@ const upload = multer({ storage });
 async function speechToText(audioFilePath) {
     try {
         console.log('收到音频文件，但语音识别已在前端完成，此接口已废弃:', audioFilePath);
-        
-        // 由于语音识别已在前端使用Web Speech API完成
-        // 此函数不应该被调用，返回空字符串
         return '';
     } catch (error) {
         console.error('语音转文字处理错误:', error);
@@ -78,7 +76,6 @@ async function analyzeEmotion(text) {
 
     const result = await response.json();
     
-    // 检查API响应格式
     if (!result.choices || !result.choices[0] || !result.choices[0].message) {
       console.error('KIMI API响应格式错误:', result);
       return {
@@ -94,7 +91,6 @@ async function analyzeEmotion(text) {
     try {
       return JSON.parse(content);
     } catch {
-      // 如果返回的不是标准JSON，手动解析
       return {
         happiness: 75,
         emotion: '中性',
@@ -113,7 +109,7 @@ async function analyzeEmotion(text) {
   }
 }
 
-// 处理文本情感分析的路由
+// API 路由
 app.post('/api/analyze-text', async (req, res) => {
   try {
     const { text } = req.body;
@@ -123,8 +119,6 @@ app.post('/api/analyze-text', async (req, res) => {
     }
 
     console.log('接收到文本:', text);
-
-    // 情感分析
     const emotionResult = await analyzeEmotion(text);
     console.log('情感分析结果:', emotionResult);
 
@@ -140,56 +134,52 @@ app.post('/api/analyze-text', async (req, res) => {
   }
 });
 
-// 语音上传接口已废弃 - 请使用前端Web Speech API + /api/analyze-text
-app.post('/api/analyze-voice', upload.single('audio'), async (req, res) => {
-  try {
-    console.log('警告：analyze-voice接口已废弃，请使用前端Web Speech API');
-    
-    // 删除上传的临时文件
-    if (req.file) {
-      fs.unlinkSync(req.file.path);
-    }
-
-    res.status(410).json({ 
-      error: '此接口已废弃',
-      message: '请使用前端Web Speech API进行语音识别，然后调用/api/analyze-text接口',
-      recommendedFlow: {
-        step1: '前端使用Web Speech API识别语音',
-        step2: '将识别结果发送到/api/analyze-text接口'
-      }
-    });
-
-  } catch (error) {
-    console.error('处理废弃接口时出错:', error);
-    res.status(500).json({ error: '服务器内部错误' });
-  }
-});
-
 // 健康检查路由
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: '语音情感分析服务运行正常' });
 });
 
-// 修改根路由 /，返回前端首页
+// 根路由
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// 注释掉原有的 HTTP 服务启动
-// app.listen(PORT, () => {
-//   console.log(`后端服务器运行在 http://localhost:${PORT}`);
-//   console.log('请确保设置了以下环境变量:');
-//   console.log('- KIMI_API_KEY (用于情感分析)');
-//   console.log('语音识别现在使用浏览器的Web Speech API，无需额外配置');
-// });
+// HTTP 服务器（重定向到 HTTPS）
+const httpServer = http.createServer((req, res) => {
+  res.writeHead(301, { 'Location': 'https://' + req.headers.host + req.url });
+  res.end();
+});
 
-// 新增 HTTPS 服务启动
-const https = require('https');
+// HTTPS 服务器
 const httpsOptions = {
-  key: require('fs').readFileSync('/root/cert/kehanluqi.fun.key'),
-  cert: require('fs').readFileSync('/root/cert/kehanluqi.fun.pem')
+  key: fs.readFileSync('/root/cert/kehanluqi.fun.key'),
+  cert: fs.readFileSync('/root/cert/kehanluqi.fun.pem'),
+  minVersion: "TLSv1.2",
+  maxVersion: "TLSv1.3",
+  ciphers: [
+    'ECDHE-ECDSA-AES128-GCM-SHA256',
+    'ECDHE-RSA-AES128-GCM-SHA256',
+    'ECDHE-ECDSA-AES256-GCM-SHA384',
+    'ECDHE-RSA-AES256-GCM-SHA384',
+    'ECDHE-ECDSA-CHACHA20-POLY1305',
+    'ECDHE-RSA-CHACHA20-POLY1305',
+    'DHE-RSA-AES128-GCM-SHA256',
+    'DHE-RSA-AES256-GCM-SHA384'
+  ].join(':'),
+  honorCipherOrder: true,
+  requestCert: false
 };
+
+// 启动服务器
+httpServer.listen(80, () => {
+  console.log('HTTP 重定向服务已启动，端口 80');
+});
 
 https.createServer(httpsOptions, app).listen(443, () => {
   console.log('HTTPS 服务已启动，端口 443');
+});
+
+// 同时在3000端口启动HTTP服务（用于测试）
+app.listen(3000, () => {
+  console.log('HTTP 测试服务已启动，端口 3000');
 });

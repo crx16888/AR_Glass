@@ -23,3 +23,8 @@ https://github.com/crx16888/AR_Glass
 7. 服务器接收到音频片段后处理（语音识别/情绪分析等）。
 
 
+https://kehanluqi.fun（主要访问地址）
+http://47.97.183.238:3000（测试地址）
+http://kehanluqi.fun（会自动重定向到 HTTPS）
+
+Rokid 眼镜对 TLS/SSL 的支持版本与服务器不匹配。让我们尝试调整服务器的 SSL/TLS 配置，使其更兼容：
