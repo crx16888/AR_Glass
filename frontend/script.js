@@ -1,7 +1,7 @@
 // 全局变量
 let isRecording = false;
 let recognition;
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = 'https://kehanluqi.fun/api';
 
 // DOM元素，把 HTML 页面中的标签“抓”出来，这样我们才能用 JS 修改它们。
 const recordBtn = document.getElementById('recordBtn');

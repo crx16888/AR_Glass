@@ -16,6 +16,9 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// 静态托管 frontend 目录
+app.use(express.static(path.join(__dirname, '../frontend')));
+
 // 配置文件上传
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -167,9 +170,26 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: '语音情感分析服务运行正常' });
 });
 
-app.listen(PORT, () => {
-  console.log(`后端服务器运行在 http://localhost:${PORT}`);
-  console.log('请确保设置了以下环境变量:');
-  console.log('- KIMI_API_KEY (用于情感分析)');
-  console.log('语音识别现在使用浏览器的Web Speech API，无需额外配置');
+// 修改根路由 /，返回前端首页
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
+// 注释掉原有的 HTTP 服务启动
+// app.listen(PORT, () => {
+//   console.log(`后端服务器运行在 http://localhost:${PORT}`);
+//   console.log('请确保设置了以下环境变量:');
+//   console.log('- KIMI_API_KEY (用于情感分析)');
+//   console.log('语音识别现在使用浏览器的Web Speech API，无需额外配置');
+// });
+
+// 新增 HTTPS 服务启动
+const https = require('https');
+const httpsOptions = {
+  key: require('fs').readFileSync('/root/cert/kehanluqi.fun.key'),
+  cert: require('fs').readFileSync('/root/cert/kehanluqi.fun.pem')
+};
+
+https.createServer(httpsOptions, app).listen(443, () => {
+  console.log('HTTPS 服务已启动，端口 443');
 });
