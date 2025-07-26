@@ -3,6 +3,9 @@
 <head> <!-- 控制本页面的一些基本信息，不显示在页面上 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>好感度监测系统</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -26,25 +29,41 @@
         <div class="content-panel">
             <h2 class="panel-title">需求内容</h2>
             
+            <!-- 录音控制区域 -->
+            <div class="recording-controls">
+                <button id="recordBtn" class="record-button">
+                    <span class="record-icon">🎤</span>
+                    <span class="record-text">开始录音</span>
+                </button>
+                <div id="recordingStatus" class="recording-status">准备录音</div>
+            </div>
+
             <div class="requirement-item">
                 <div class="requirement-label">
                     <span class="status-indicator"></span>对方对我的好感度
                 </div>
-                <div class="requirement-value">实时监测中...</div>
+                <div class="requirement-value" id="happinessText">实时监测中...</div>
             </div>
             
             <div class="requirement-item">
                 <div class="requirement-label">
                     <span class="status-indicator"></span>当前状态
                 </div>
-                <div class="requirement-value">积极友好</div>
+                <div class="requirement-value" id="currentStatus">积极友好</div>
             </div>
             
             <div class="requirement-item">
                 <div class="requirement-label">
                     <span class="status-indicator"></span>建议行动
                 </div>
-                <div class="requirement-value">保持当前交流方式</div>
+                <div class="requirement-value" id="suggestion">保持当前交流方式</div>
+            </div>
+            
+            <div class="requirement-item">
+                <div class="requirement-label">
+                    <span class="status-indicator"></span>识别文字
+                </div>
+                <div class="requirement-value" id="recognizedText">暂无</div>
             </div>
             
             <div class="requirement-item">
@@ -56,6 +75,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script> <!--浏览器会立即加载并执行这个JS文件 -->
+    <script src="script.js?v=20250726"></script> <!--浏览器会立即加载并执行这个JS文件 -->
 </body>
 </html>
